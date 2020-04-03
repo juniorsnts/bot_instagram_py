@@ -1,11 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
-
 import time
 credentials = {
-    "username": "96991190883",
-    "password": "qwe19as3",
+    "username": "",
+    "password": "",
 }
 
 userList = ["thediego_st"]
@@ -23,11 +22,21 @@ def open_instagram():
     password.send_keys(Keys.RETURN)
     time.sleep(6)
     for user in userList:
+        print("Buscando o usuario: {}".format(user))
         driver.get("http://instagram.com/{}/".format(user))
         fotos = driver.find_elements_by_css_selector('article > div img[decoding="auto"]')
-        time.sleep(3)
+        print("Encontrei {} fotos".format(len(fotos)))
         for foto in fotos:
             ActionChains(driver).move_to_element(foto).click().perform()
             time.sleep(1)
+            try:
+                curtida = driver.find_element_by_css_selector('div button > svg[aria-label="Curtir"]')
+                curtida.click()
+                print('Curtir')
+                driver.find_element_by_css_selector('div button > svg[aria-label="Fechar"]').click()
+            except:
+                print('Ja curtido')
+                driver.find_element_by_css_selector('div button > svg[aria-label="Fechar"]').click()
+        print('Finish')
 
 open_instagram()
